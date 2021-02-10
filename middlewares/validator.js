@@ -46,14 +46,14 @@ const moviesAddValidation = celebrate({
       .messages({
         'any.required': 'Необходимо заполнить это поле',
       }),
-  })
-})
+  }),
+});
 
 const moviesDeleteValidation = celebrate({
   body: Joi.object().keys({
     movieId: Joi.string().hex().length(24),
   }),
-})
+});
 
 const registrationValidation = celebrate({
   body: Joi.object().keys({
@@ -73,9 +73,9 @@ const registrationValidation = celebrate({
       .messages({
         'any.required': 'Заполните это поле',
         'string.min': 'Это поле должно содержать не менее 5 символов',
-      })
-  })
-})
+      }),
+  }),
+});
 
 const loginValidation = celebrate({
   body: Joi.object().keys({
@@ -89,13 +89,13 @@ const loginValidation = celebrate({
       .messages({
         'any.required': 'Заполните это поле',
         'string.min': 'Это поле должно содержать не менее 5 символов',
-      })
-  })
-})
+      }),
+  }),
+});
 
 module.exports = {
   moviesAddValidation,
   moviesDeleteValidation,
   registrationValidation,
   loginValidation,
-}
+};

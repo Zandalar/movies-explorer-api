@@ -6,7 +6,7 @@ const ForbiddenError = require('../errors/ForbiddenError');
 function getMovies(req, res, next) {
   Movie.find({}).select('+owner')
     .orFail(new NotFoundError('Фильмы не найдены'))
-    .then((data) = res.status(200).send(data))
+    .then((movies) => res.status(200).send(movies))
     .catch(next);
 }
 
@@ -34,9 +34,9 @@ function createMovie(req, res, next) {
     thumbnail,
     nameRU,
     nameEN,
-    owner: req.user._id
+    owner: req.user._id,
   })
-    .then((movie) = res.status(200).send(movie))
+    .then((movie) => res.status(200).send(movie))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         throw new ValidationError('Введите корректные данные');
@@ -46,12 +46,12 @@ function createMovie(req, res, next) {
     .catch(next);
 }
 
-function deleteMovie (req, res, next) {
+function deleteMovie(req, res, next) {
   Movie.findById(req.params.movieId)
     .orFail(new NotFoundError('Фильма с таким id не существует'))
     .then((movie) => {
       if (req.user._id === movie.owner.toString()) {
-        Card.findByIdAndRemove(req.params.movieId)
+        Movie.findByIdAndRemove(req.params.movieId)
           .then((deletedMovie) => res.status(200).send(deletedMovie))
           .catch(next);
       } else {
@@ -71,4 +71,4 @@ module.exports = {
   getMovies,
   createMovie,
   deleteMovie,
-}
+};
