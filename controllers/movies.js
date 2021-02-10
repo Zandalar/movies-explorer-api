@@ -47,7 +47,7 @@ function createMovie(req, res, next) {
 }
 
 function deleteMovie(req, res, next) {
-  Movie.findById(req.params.movieId)
+  Movie.findById(req.params.movieId).select('+owner')
     .orFail(new NotFoundError('Фильма с таким id не существует'))
     .then((movie) => {
       if (req.user._id === movie.owner.toString()) {
