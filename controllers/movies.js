@@ -1,6 +1,6 @@
 const Movie = require('../models/movie');
 const NotFoundError = require('../errors/NotFoundError');
-const ReqError = require('../errors/ReqError');
+const ValidationError = require('../errors/ValidationError');
 const ForbiddenError = require('../errors/ForbiddenError');
 
 function getMovies(req, res, next) {
@@ -39,7 +39,7 @@ function createMovie(req, res, next) {
     .then((movie) = res.status(200).send(movie))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new ReqError('Введите корректные данные');
+        throw new ValidationError('Введите корректные данные');
       }
       throw err;
     })
@@ -60,7 +60,7 @@ function deleteMovie (req, res, next) {
     })
     .catch((err) => {
       if (err.kind === 'ObjectId') {
-        throw new ReqError('Не передан корректный id');
+        throw new ValidationError('Не передан корректный id');
       }
       throw err;
     })

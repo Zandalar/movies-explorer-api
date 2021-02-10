@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const NotFoundError = require('../errors/NotFoundError');
-const ReqError = require('../errors/ReqError');
+const ValidationError = require('../errors/ValidationError');
 const ConflictError = require('../errors/ConflictError');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
@@ -30,7 +30,7 @@ function createUser(req, res, next) {
     }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new ReqError('Введены некорректные данные');
+        throw new ValidationError('Введены некорректные данные');
       } else if (err.code === 11000 && err.name === 'MongoError') {
         throw new ConflictError('Такой пользователь уже зарегистрирован');
       }
@@ -49,7 +49,7 @@ function updateUser(req, res, next) {
     .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new ReqError('Введите корректные данные');
+        throw new ValidationError('Введите корректные данные');
       }
       throw err;
     })
