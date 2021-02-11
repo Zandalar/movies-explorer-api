@@ -17,7 +17,6 @@ mongoose.connect(config.MONGO_URL, config.mongooseParams);
 
 app.use(helmet());
 app.use(cors());
-app.use(limiter);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -27,7 +26,8 @@ app.use(requestLogger);
 app.use('/', router);
 
 app.use(errorLogger);
+app.use(limiter);
 app.use(errors());
 app.use(centralErrorHandler);
 
-app.listen(config.PORT, () => {});
+app.listen(config.PORT);

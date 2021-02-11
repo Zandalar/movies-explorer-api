@@ -12,8 +12,8 @@ const {
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    minLength: 2,
-    maxLength: 30,
+    minlength: 2,
+    maxlength: 30,
   },
   email: {
     type: String,
@@ -30,7 +30,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     select: false,
-    minLength: 5,
     validate: {
       validator(password) {
         return /^\S+$/.test(password);

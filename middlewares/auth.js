@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
-const JWT_SECRET = require('../config/config');
+const { JWT_SECRET } = require('../config/config');
 const AuthError = require('../errors/AuthError');
-const { unauthorizedErrorText, tokenNotFoundErrorText } = require('../config/constants');
+const { unauthorizedErrorText } = require('../config/constants');
 
 function auth(req, res, next) {
   const { authorization } = req.headers;
@@ -15,7 +15,7 @@ function auth(req, res, next) {
   try {
     payload = jwt.verify(token, JWT_SECRET);
   } catch (err) {
-    next(new AuthError(tokenNotFoundErrorText));
+    next(new AuthError(unauthorizedErrorText));
   }
   req.user = payload;
   next();

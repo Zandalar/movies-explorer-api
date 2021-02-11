@@ -4,7 +4,7 @@ const User = require('../models/user');
 const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
 const ConflictError = require('../errors/ConflictError');
-const JWT_SECRET = require('../config/config');
+const { JWT_SECRET } = require('../config/config');
 const {
   validationErrorText,
   userNotFoundErrorText,
@@ -64,7 +64,6 @@ function updateUser(req, res, next) {
 function login(req, res, next) {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
-    .orFail(new NotFoundError(loginErrorText))
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },

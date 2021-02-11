@@ -1,4 +1,4 @@
-const serverErrorText = require('../config/constants');
+const { serverErrorText } = require('../config/constants');
 
 function centralErrorHandler(err, req, res, next) {
   const { statusCode = 500, message } = err;
