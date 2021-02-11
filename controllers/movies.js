@@ -2,10 +2,17 @@ const Movie = require('../models/movie');
 const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
 const ForbiddenError = require('../errors/ForbiddenError');
+const {
+  idValidationErrorText,
+  movieNotFoundErrorText,
+  validationErrorText,
+  movieIdNotFoundErrorText,
+  forbiddenErrorText,
+} = require('../config/constants');
 
 function getMovies(req, res, next) {
   Movie.find({}).select('+owner')
-    .orFail(new NotFoundError('Фильмы не найдены'))
+    .orFail(new NotFoundError(movieNotFoundErrorText))
     .then((movies) => res.status(200).send(movies))
     .catch(next);
 }
@@ -39,7 +46,7 @@ function createMovie(req, res, next) {
     .then((movie) => res.status(200).send(movie))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new ValidationError('Введите корректные данные');
+        throw new ValidationError(validationErrorText);
       }
       throw err;
     })
@@ -48,19 +55,19 @@ function createMovie(req, res, next) {
 
 function deleteMovie(req, res, next) {
   Movie.findById(req.params.movieId).select('+owner')
-    .orFail(new NotFoundError('Фильма с таким id не существует'))
+    .orFail(new NotFoundError(movieIdNotFoundErrorText))
     .then((movie) => {
       if (req.user._id === movie.owner.toString()) {
         Movie.findByIdAndRemove(req.params.movieId)
           .then((deletedMovie) => res.status(200).send(deletedMovie))
           .catch(next);
       } else {
-        throw new ForbiddenError('Нет доступа');
+        throw new ForbiddenError(forbiddenErrorText);
       }
     })
     .catch((err) => {
       if (err.kind === 'ObjectId') {
-        throw new ValidationError('Не передан корректный id');
+        throw new ValidationError(idValidationErrorText);
       }
       throw err;
     })

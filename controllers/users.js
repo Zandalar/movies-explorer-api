@@ -4,12 +4,17 @@ const User = require('../models/user');
 const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
 const ConflictError = require('../errors/ConflictError');
-
-const { NODE_ENV, JWT_SECRET } = process.env;
+const JWT_SECRET = require('../config/config');
+const {
+  validationErrorText,
+  userNotFoundErrorText,
+  conflictErrorText,
+  loginErrorText,
+} = require('../config/constants');
 
 function getUser(req, res, next) {
   User.findById(req.user._id)
-    .orFail(new NotFoundError('Такой пользователь не найден'))
+    .orFail(new NotFoundError(userNotFoundErrorText))
     .then((user) => res.status(200).send(user))
     .catch(next);
 }
@@ -30,9 +35,9 @@ function createUser(req, res, next) {
     }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new ValidationError('Введены некорректные данные');
+        throw new ValidationError(validationErrorText);
       } else if (err.code === 11000 && err.name === 'MongoError') {
-        throw new ConflictError('Такой пользователь уже зарегистрирован');
+        throw new ConflictError(conflictErrorText);
       }
       throw err;
     })
@@ -45,11 +50,11 @@ function updateUser(req, res, next) {
     new: true,
     runValidators: true,
   })
-    .orFail(new NotFoundError('Нет юзера с таким id'))
+    .orFail(new NotFoundError(userNotFoundErrorText))
     .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new ValidationError('Введите корректные данные');
+        throw new ValidationError(validationErrorText);
       }
       throw err;
     })
@@ -59,10 +64,11 @@ function updateUser(req, res, next) {
 function login(req, res, next) {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
+    .orFail(new NotFoundError(loginErrorText))
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        NODE_ENV === 'production' ? JWT_SECRET : 'vodka-bear-balalayka',
+        JWT_SECRET,
         { expiresIn: '7d' },
       );
       res.status(200).send({ token });

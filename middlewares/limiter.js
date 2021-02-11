@@ -1,8 +1,10 @@
 const rateLimit = require('express-rate-limit');
+const limiterErrorText = require('../config/constants');
 
 const limiter = rateLimit({
-  windowMs: 1000 * 60 * 10,
+  windowMs: 15 * 60 * 1000,
   max: 100,
+  message: limiterErrorText,
 });
 
 module.exports = limiter;

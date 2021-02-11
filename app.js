@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
@@ -8,19 +9,11 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const limiter = require('./middlewares/limiter');
 const router = require('./routes/index');
 const centralErrorHandler = require('./middlewares/centralErrorHandler');
-
-const { PORT = 3000 } = process.env;
+const config = require('./config/config');
 
 const app = express();
 
-require('dotenv').config();
-
-mongoose.connect('mongodb://localhost:27017/moviesdb', {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useFindAndModify: false,
-  useUnifiedTopology: true,
-});
+mongoose.connect(config.MONGO_URL, config.mongooseParams);
 
 app.use(helmet());
 app.use(cors());
@@ -37,6 +30,4 @@ app.use(errorLogger);
 app.use(errors());
 app.use(centralErrorHandler);
 
-app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}`);
-});
+app.listen(config.PORT, () => {});

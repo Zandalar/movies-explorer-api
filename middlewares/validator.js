@@ -1,50 +1,61 @@
 const { celebrate, Joi } = require('celebrate');
+const {
+  requiredErrorText,
+  emailErrorText,
+  passwordErrorText,
+  linkErrorText,
+  urlRegEx,
+  passRegEx,
+} = require('../config/constants');
 
 const moviesAddValidation = celebrate({
   body: Joi.object().keys({
     country: Joi.string().required()
       .messages({
-        'any.required': 'Необходимо заполнить это поле',
+        'any.required': requiredErrorText,
       }),
     director: Joi.string().required()
       .messages({
-        'any.required': 'Необходимо заполнить это поле',
+        'any.required': requiredErrorText,
       }),
     duration: Joi.string().required()
       .messages({
-        'any.required': 'Необходимо заполнить это поле',
+        'any.required': requiredErrorText,
       }),
     year: Joi.string().required()
       .messages({
-        'any.required': 'Необходимо заполнить это поле',
+        'any.required': requiredErrorText,
       }),
     description: Joi.string().required()
       .messages({
-        'any.required': 'Необходимо заполнить это поле',
+        'any.required': requiredErrorText,
       }),
-    image: Joi.string().required()
+    image: Joi.string().required().regex(urlRegEx)
       .messages({
-        'any.required': 'Необходимо заполнить это поле',
+        'any.required': requiredErrorText,
+        'string.regex': linkErrorText,
       }),
-    trailer: Joi.string().required()
+    trailer: Joi.string().required().regex(urlRegEx)
       .messages({
-        'any.required': 'Необходимо заполнить это поле',
+        'any.required': requiredErrorText,
+        'string.regex': linkErrorText,
       }),
-    thumbnail: Joi.string().required()
+    thumbnail: Joi.string().required().regex(urlRegEx)
       .messages({
-        'any.required': 'Необходимо заполнить это поле',
+        'any.required': requiredErrorText,
+        'string.regex': linkErrorText,
       }),
     owner: Joi.string().required()
       .messages({
-        'any.required': 'Необходимо заполнить это поле',
+        'any.required': requiredErrorText,
       }),
     nameRU: Joi.string().required()
       .messages({
-        'any.required': 'Необходимо заполнить это поле',
+        'any.required': requiredErrorText,
       }),
     nameEN: Joi.string().required()
       .messages({
-        'any.required': 'Необходимо заполнить это поле',
+        'any.required': requiredErrorText,
       }),
   }),
 });
@@ -59,20 +70,20 @@ const registrationValidation = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30)
       .messages({
-        'any.required': 'Заполните это поле',
+        'any.required': requiredErrorText,
         'string.min': 'Это поле должно содержать не менее 2 символов',
         'string.max': 'Это поле должно содержать не более 30 символов',
       }),
     email: Joi.string().required().email()
-      .message('Введите корректный email')
       .messages({
-        'any.required': 'Заполните это поле',
+        'string.email': emailErrorText,
+        'any.required': requiredErrorText,
       }),
-    password: Joi.string().min(5).required().pattern(/^\S+$/)
-      .message('Пароль не должен содержать пробелы')
+    password: Joi.string().min(5).required().regex(passRegEx)
       .messages({
-        'any.required': 'Заполните это поле',
+        'any.required': requiredErrorText,
         'string.min': 'Это поле должно содержать не менее 5 символов',
+        'string.regex': passwordErrorText,
       }),
   }),
 });
@@ -80,15 +91,15 @@ const registrationValidation = celebrate({
 const loginValidation = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email()
-      .message('Введите корректный email')
       .messages({
-        'any.required': 'Заполните это поле',
+        'string.email': emailErrorText,
+        'any.required': requiredErrorText,
       }),
-    password: Joi.string().min(5).required().pattern(/^\S+$/)
-      .message('Пароль не должен содержать пробелы')
+    password: Joi.string().min(5).required().regex(passRegEx)
       .messages({
-        'any.required': 'Заполните это поле',
+        'any.required': requiredErrorText,
         'string.min': 'Это поле должно содержать не менее 5 символов',
+        'string.regex': passwordErrorText,
       }),
   }),
 });
