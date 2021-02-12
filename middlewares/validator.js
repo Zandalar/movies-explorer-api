@@ -70,7 +70,7 @@ const registrationValidation = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30)
       .messages({
-        'any.required': requiredErrorText,
+        'string.required': requiredErrorText,
         'string.min': 'Это поле должно содержать не менее 2 символов',
         'string.max': 'Это поле должно содержать не более 30 символов',
       }),

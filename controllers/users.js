@@ -3,12 +3,14 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
+const AuthError = require('../errors/AuthError');
 const ConflictError = require('../errors/ConflictError');
 const { JWT_SECRET } = require('../config/config');
 const {
   validationErrorText,
   userNotFoundErrorText,
   conflictErrorText,
+  loginErrorText,
 } = require('../config/constants');
 
 function getUser(req, res, next) {
@@ -54,6 +56,8 @@ function updateUser(req, res, next) {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         throw new ValidationError(validationErrorText);
+      } else if (err.code === 11000 && err.name === 'MongoError') {
+        throw new ConflictError(conflictErrorText);
       }
       throw err;
     })
@@ -64,12 +68,20 @@ function login(req, res, next) {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
+      if (!user) {
+        return new AuthError(loginErrorText);
+      }
       const token = jwt.sign(
         { _id: user._id },
         JWT_SECRET,
         { expiresIn: '7d' },
       );
       res.status(200).send({ token });
+    })
+    .catch((err) => {
+      if (err.name === 'AuthError' || 'NotFoundError') {
+        throw new AuthError(loginErrorText);
+      }
     })
     .catch(next);
 }
