@@ -9,7 +9,6 @@ const {
   validationErrorText,
   userNotFoundErrorText,
   conflictErrorText,
-  loginErrorText,
 } = require('../config/constants');
 
 function getUser(req, res, next) {
