@@ -16,7 +16,7 @@ const {
 function getUser(req, res, next) {
   User.findById(req.user._id)
     .orFail(new NotFoundError(userNotFoundErrorText))
-    .then((user) => res.status(200).send(user))
+    .then((user) => res.send(user))
     .catch(next);
 }
 
@@ -30,7 +30,7 @@ function createUser(req, res, next) {
       email,
       password: hash,
     }))
-    .then((user) => res.status(200).send({
+    .then((user) => res.send({
       _id: user._id,
       email: user.email,
     }))
@@ -52,7 +52,7 @@ function updateUser(req, res, next) {
     runValidators: true,
   })
     .orFail(new NotFoundError(userNotFoundErrorText))
-    .then((user) => res.status(200).send(user))
+    .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         throw new ValidationError(validationErrorText);
@@ -76,7 +76,7 @@ function login(req, res, next) {
         JWT_SECRET,
         { expiresIn: '7d' },
       );
-      res.status(200).send({ token });
+      res.send({ token });
     })
     .catch((err) => {
       if (err.name === 'AuthError') {

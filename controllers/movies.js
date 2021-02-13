@@ -13,7 +13,7 @@ const {
 function getMovies(req, res, next) {
   Movie.find({ owner: req.user._id })
     .orFail(new NotFoundError(movieNotFoundErrorText))
-    .then((movies) => res.status(200).send(movies))
+    .then((movies) => res.send(movies))
     .catch(next);
 }
 
@@ -43,7 +43,7 @@ function createMovie(req, res, next) {
     nameEN,
     owner: req.user._id,
   })
-    .then((movie) => res.status(200).send(movie))
+    .then((movie) => res.send(movie))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         throw new ValidationError(validationErrorText);
@@ -58,8 +58,8 @@ function deleteMovie(req, res, next) {
     .orFail(new NotFoundError(movieIdNotFoundErrorText))
     .then((movie) => {
       if (req.user._id === movie.owner.toString()) {
-        Movie.findByIdAndRemove(req.params.movieId)
-          .then((deletedMovie) => res.status(200).send(deletedMovie))
+        movie.remove()
+          .then((deletedMovie) => res.send(deletedMovie))
           .catch(next);
       } else {
         throw new ForbiddenError(forbiddenErrorText);
