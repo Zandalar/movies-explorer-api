@@ -1,10 +1,10 @@
 const { celebrate, Joi } = require('celebrate');
+const validator = require('validator');
 const {
   requiredErrorText,
   emailErrorText,
   passwordErrorText,
   linkErrorText,
-  urlRegEx,
   passRegEx,
 } = require('../config/constants');
 
@@ -18,7 +18,7 @@ const moviesAddValidation = celebrate({
       .messages({
         'any.required': requiredErrorText,
       }),
-    duration: Joi.string().required()
+    duration: Joi.number().required()
       .messages({
         'any.required': requiredErrorText,
       }),
@@ -30,22 +30,30 @@ const moviesAddValidation = celebrate({
       .messages({
         'any.required': requiredErrorText,
       }),
-    image: Joi.string().required().regex(urlRegEx)
+    image: Joi.string().required().custom((value, helpers) => {
+      if (validator.isURL(value)) {
+        return value;
+      }
+      return helpers.message(linkErrorText);
+    })
       .messages({
         'any.required': requiredErrorText,
-        'string.regex': linkErrorText,
       }),
-    trailer: Joi.string().required().regex(urlRegEx)
+    trailer: Joi.string().required().custom((value, helpers) => {
+      if (validator.isURL(value)) {
+        return value;
+      }
+      return helpers.message(linkErrorText);
+    })
       .messages({
         'any.required': requiredErrorText,
-        'string.regex': linkErrorText,
       }),
-    thumbnail: Joi.string().required().regex(urlRegEx)
-      .messages({
-        'any.required': requiredErrorText,
-        'string.regex': linkErrorText,
-      }),
-    owner: Joi.string().required()
+    thumbnail: Joi.string().required().custom((value, helpers) => {
+      if (validator.isURL(value)) {
+        return value;
+      }
+      return helpers.message(linkErrorText);
+    })
       .messages({
         'any.required': requiredErrorText,
       }),
@@ -104,9 +112,26 @@ const loginValidation = celebrate({
   }),
 });
 
+const userValidation = celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().required().min(2).max(30)
+      .messages({
+        'string.required': requiredErrorText,
+        'string.min': 'Это поле должно содержать не менее 2 символов',
+        'string.max': 'Это поле должно содержать не более 30 символов',
+      }),
+    email: Joi.string().required().email()
+      .messages({
+        'string.email': emailErrorText,
+        'any.required': requiredErrorText,
+      }),
+  }),
+});
+
 module.exports = {
   moviesAddValidation,
   moviesDeleteValidation,
   registrationValidation,
   loginValidation,
+  userValidation,
 };

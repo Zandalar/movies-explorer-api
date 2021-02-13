@@ -11,7 +11,7 @@ const {
 } = require('../config/constants');
 
 function getMovies(req, res, next) {
-  Movie.find({}).select('+owner')
+  Movie.find({ owner: req.user._id })
     .orFail(new NotFoundError(movieNotFoundErrorText))
     .then((movies) => res.status(200).send(movies))
     .catch(next);

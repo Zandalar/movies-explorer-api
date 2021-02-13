@@ -69,7 +69,7 @@ function login(req, res, next) {
   return User.findUserByCredentials(email, password)
     .then((user) => {
       if (!user) {
-        return new AuthError(loginErrorText);
+        throw new AuthError(loginErrorText);
       }
       const token = jwt.sign(
         { _id: user._id },
@@ -79,7 +79,9 @@ function login(req, res, next) {
       res.status(200).send({ token });
     })
     .catch((err) => {
-      if (err.name === 'AuthError' || 'NotFoundError') {
+      if (err.name === 'AuthError') {
+        throw new AuthError(loginErrorText);
+      } else if (err.name === 'NotFoundError') {
         throw new AuthError(loginErrorText);
       }
     })

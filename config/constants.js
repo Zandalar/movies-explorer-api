@@ -19,7 +19,6 @@ const idValidationErrorText = 'Передан некорректный id';
 
 const requiredErrorText = 'Необходимо заполнить это поле';
 
-const urlRegEx = /^(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!-]))?/;
 const passRegEx = /^\S+$/;
 
 module.exports = {
@@ -40,6 +39,5 @@ module.exports = {
   validationErrorText,
   idValidationErrorText,
   requiredErrorText,
-  urlRegEx,
   passRegEx,
 };
