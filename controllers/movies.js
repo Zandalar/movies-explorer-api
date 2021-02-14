@@ -8,7 +8,7 @@ const {
   validationErrorText,
   movieIdNotFoundErrorText,
   forbiddenErrorText,
-} = require('../config/constants');
+} = require('../constants/constants');
 
 function getMovies(req, res, next) {
   Movie.find({ owner: req.user._id })
@@ -27,6 +27,7 @@ function createMovie(req, res, next) {
     image,
     trailer,
     thumbnail,
+    movieId,
     nameRU,
     nameEN,
   } = req.body;
@@ -39,6 +40,7 @@ function createMovie(req, res, next) {
     image,
     trailer,
     thumbnail,
+    movieId,
     nameRU,
     nameEN,
     owner: req.user._id,

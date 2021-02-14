@@ -11,7 +11,7 @@ const {
   userNotFoundErrorText,
   conflictErrorText,
   loginErrorText,
-} = require('../config/constants');
+} = require('../constants/constants');
 
 function getUser(req, res, next) {
   User.findById(req.user._id)
@@ -79,9 +79,7 @@ function login(req, res, next) {
       res.send({ token });
     })
     .catch((err) => {
-      if (err.name === 'AuthError') {
-        throw new AuthError(loginErrorText);
-      } else if (err.name === 'NotFoundError') {
+      if (err.name === 'AuthError' || 'NotFoundError') {
         throw new AuthError(loginErrorText);
       }
     })

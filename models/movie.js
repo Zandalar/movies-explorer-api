@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
-const { linkErrorText } = require('../config/constants');
+const { linkErrorText } = require('../constants/constants');
 
 const movieSchema = new mongoose.Schema({
   country: {
@@ -58,6 +58,10 @@ const movieSchema = new mongoose.Schema({
     ref: 'user',
     required: true,
     select: false,
+  },
+  movieId: {
+    type: Number,
+    required: true,
   },
   nameRU: {
     type: String,

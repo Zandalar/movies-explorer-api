@@ -17,7 +17,11 @@ const conflictErrorText = 'Такой пользователь уже зарег
 const validationErrorText = 'Вы ввели некорректные данные. Попробуйте еще раз';
 const idValidationErrorText = 'Передан некорректный id';
 
-const requiredErrorText = 'Необходимо заполнить это поле';
+const requiredErrorText = 'Необходимо заполнить поле {#label}';
+const minLengthErrorText = 'Это поле должно содержать не менее {#limit} символов';
+const maxLengthErrorText = 'Это поле должно содержать не более {#limit} символов';
+const emptyInputErrorText = 'Это поле не может быть пустым';
+const idErrorText = 'Некорректный id';
 
 const passRegEx = /^\S+$/;
 
@@ -39,5 +43,9 @@ module.exports = {
   validationErrorText,
   idValidationErrorText,
   requiredErrorText,
+  minLengthErrorText,
+  maxLengthErrorText,
+  emptyInputErrorText,
+  idErrorText,
   passRegEx,
 };

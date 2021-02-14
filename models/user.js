@@ -7,7 +7,7 @@ const {
   loginErrorText,
   passwordErrorText,
   userNotFoundErrorText,
-} = require('../config/constants');
+} = require('../constants/constants');
 
 const userSchema = new mongoose.Schema({
   name: {
